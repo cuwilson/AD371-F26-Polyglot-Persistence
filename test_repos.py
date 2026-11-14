@@ -41,3 +41,26 @@ def test_validation(tmp_path, backend):
     pid = client.post(root, json={"name": "Valid"}).json["id"]
     assert client.post(f"{root}/{pid}/tasks", json={"title": "task", "status": "invalid"}).status_code == 400
     assert client.patch(f"{root}/{pid}", json={"id": "malicious"}).status_code == 400
+
+
+def test_sql_foreign_key_constraint(tmp_path):
+    import sqlite3
+
+    repo = SQLiteRepo(tmp_path / "test_fk.sqlite3")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        with repo.connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO tasks
+                (id, project_id, title, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    "invalid-task-id",
+                    "nonexistent-project-id",
+                    "Orphaned Task",
+                    "2026-11-13T12:00:00Z",
+                    "2026-11-13T12:00:00Z",
+                ),
+            )

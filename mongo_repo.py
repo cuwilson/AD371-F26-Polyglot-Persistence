@@ -53,9 +53,15 @@ class MongoRepo:
         return None if project is None else project["tasks"]
 
     def get_task(self, pid, tid):
-        # Return task directly using an element-match projection.
-        doc = self.collection.find_one({"_id": pid, "tasks.id": tid}, {"tasks.$": 1})
-        return doc["tasks"][0] if doc else None
+        doc = self.collection.find_one({"_id": pid}, {"tasks": 1})
+    
+        if not doc:
+            return None
+    
+        return next(
+            (task for task in doc.get("tasks", []) if task["id"] == tid),
+            None
+        )
 
     def create_task(self, pid, data):
         ts = now()
