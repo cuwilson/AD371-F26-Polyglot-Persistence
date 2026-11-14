@@ -1,0 +1,18 @@
+{
+  "_id": "project-uuid",
+  "name": "Website refresh",
+  "description": "Update the landing page",
+  "created_at": {"$date": "2026-11-13T00:00:00Z"},
+  "updated_at": {"$date": "2026-11-13T00:00:00Z"},
+  "tasks": [
+    {
+      "id": "task-uuid",
+      "title": "Create wireframes",
+      "description": "Homepage layout",
+      "status": "todo",
+      "due_at": null,
+      "created_at": {"$date": "2026-11-13T00:00:00Z"},
+      "updated_at": {"$date": "2026-11-13T00:00:00Z"}
+    }
+  ]
+}
